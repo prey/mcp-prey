@@ -1,5 +1,15 @@
 # Prey MCP server
 
+<p align="center">
+  <img src="./assets/prey.svg" alt="Prey" height="56" />
+</p>
+
+![Docker Build](https://github.com/prey/mcp-prey/actions/workflows/docker.yml/badge.svg)
+![Docker Hub Version](https://img.shields.io/docker/v/preyproject/mcp-prey?sort=semver)
+![Docker Hub Pulls](https://img.shields.io/docker/pulls/preyproject/mcp-prey)
+![license](https://img.shields.io/github/license/prey/mcp-prey)
+![GitHub last commit](https://img.shields.io/github/last-commit/prey/mcp-prey)
+
 A Model Context Protocol (MCP) server for the Prey Public API.
 
 This server provides read and write access to your Prey account with guardrails.
