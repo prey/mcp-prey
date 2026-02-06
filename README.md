@@ -87,6 +87,31 @@ Supported transports:
 
 ## Examples
 
+Docker (streamable-http):
+```bash
+docker run --rm -p 8000:8000 \
+  -e PREY_API_KEY=YOUR_KEY \
+  preyproject/mcp-prey:latest \
+  --transport streamable-http --address 0.0.0.0:8000 --endpoint-path /mcp
+```
+
+Docker (SSE):
+```bash
+docker run --rm -p 8000:8000 \
+  -e PREY_API_KEY=YOUR_KEY \
+  preyproject/mcp-prey:latest \
+  --transport sse --address 0.0.0.0:8000 --base-path /
+```
+
+Docker (write enabled):
+```bash
+docker run --rm -p 8000:8000 \
+  -e PREY_API_KEY=YOUR_KEY \
+  -e PREY_ALLOW_WRITE=true \
+  preyproject/mcp-prey:latest \
+  --transport streamable-http --address 0.0.0.0:8000 --endpoint-path /mcp
+```
+
 Stdio:
 ```bash
 PREY_API_KEY=... \
@@ -104,6 +129,49 @@ Streamable HTTP:
 ```bash
 PREY_API_KEY=... \
 ./mcp-prey --transport streamable-http --address localhost:8000 --endpoint-path /mcp
+```
+
+Claude Desktop (example config):
+```json
+{
+  "mcpServers": {
+    "prey": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-p",
+        "8000:8000",
+        "-e",
+        "PREY_API_KEY=YOUR_KEY",
+        "preyproject/mcp-prey:latest",
+        "--transport",
+        "streamable-http",
+        "--address",
+        "0.0.0.0:8000",
+        "--endpoint-path",
+        "/mcp"
+      ]
+    }
+  }
+}
+```
+
+ChatGPT Developer Mode (SSE or streamable HTTP):
+1. Enable Developer mode in ChatGPT settings (Connectors → Advanced → Developer mode).
+2. Add a connector with your MCP server URL.
+3. Use it in a chat via the Developer mode tool picker.
+
+Codex CLI (example):
+```bash
+codex mcp add prey --url http://localhost:8000/mcp
+codex mcp list
+```
+
+Codex config (example `~/.codex/config.toml`):
+```toml
+[mcp_servers.prey]
+url = "http://localhost:8000/mcp"
 ```
 
 ## Development
