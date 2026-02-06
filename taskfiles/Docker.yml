@@ -1,0 +1,83 @@
+version: "3"
+
+taskDcSvc: &taskDcSvc
+  vars:
+    SV: "{{default .DEFAULT_SERVICE .SV}}"
+    CMD: "{{default \"bash\" .CMD}}"
+  cmds:
+    - docker compose -f "{{.DC_FILE}}" {{.DOCKER_CMD}}
+
+tasks:
+  dev:up:
+    desc: "Levanta el stack"
+    vars:
+      DOCKER_CMD: "up -d"
+      SV: "{{.DEFAULT_SERVICE}}"
+    <<: *taskDcSvc
+
+  dev:down:
+    desc: "Detiene los contenedores (sin borrar volúmenes)"
+    vars:
+      DOCKER_CMD: "down --remove-orphans"
+      SV: "{{.DEFAULT_SERVICE}}"
+    <<: *taskDcSvc
+
+  dev:nuke:
+    desc: "Elimina contenedores y volúmenes (¡cuidado!)"
+    vars:
+      DOCKER_CMD: "down -v --remove-orphans"
+      SV: "{{.DEFAULT_SERVICE}}"
+    <<: *taskDcSvc
+
+  dev:ps:
+    desc: "Muestra el estado de los servicios"
+    vars:
+      DOCKER_CMD: "ps"
+      SV: "{{.DEFAULT_SERVICE}}"
+    <<: *taskDcSvc
+
+  dev:logs:
+    desc: "Logs del servicio indicado (SV={{.DEFAULT_SERVICE}} por defecto)"
+    vars:
+      DOCKER_CMD: "logs -f {{.SV}}"
+    <<: *taskDcSvc
+
+  dev:logs:menu:
+    desc: "Menu interactivo para logs"
+    cmds:
+      - |
+        SERVICE="$(docker compose -f "{{.DC_FILE}}" config --services | gum choose)"
+        docker compose -f "{{.DC_FILE}}" logs -f "$SERVICE"
+
+  dev:exec:
+    desc: "Shell dentro del servicio (SV={{.DEFAULT_SERVICE}}, CMD=bash por defecto)"
+    vars:
+      DOCKER_CMD: "exec {{.SV}} {{.CMD}}"
+    <<: *taskDcSvc
+
+  dev:exec:menu:
+    desc: "Menu interactivo para exec"
+    vars:
+      CMD: "{{default \"bash\" .CMD}}"
+    cmds:
+      - |
+        SERVICE="$(docker compose -f "{{.DC_FILE}}" config --services | gum choose)"
+        docker compose -f "{{.DC_FILE}}" exec "$SERVICE" "{{.CMD}}"
+
+  dev:restart:
+    desc: "Reinicia un servicio (SV={{.DEFAULT_SERVICE}})"
+    vars:
+      DOCKER_CMD: "restart {{.SV}}"
+    <<: *taskDcSvc
+
+  dev:build:
+    desc: "Compila la imagen de un servicio (SV={{.DEFAULT_SERVICE}})"
+    vars:
+      DOCKER_CMD: "build {{.SV}}"
+    <<: *taskDcSvc
+
+  dev:shell:
+    desc: "Crea un contenedor efímero para correr comandos (SV={{.DEFAULT_SERVICE}})"
+    vars:
+      DOCKER_CMD: "run --rm {{.SV}} {{.CMD}}"
+    <<: *taskDcSvc
