@@ -201,3 +201,7 @@ task mcp-prey:dev:exec SV=mcp-prey-dev CMD='go test ./...'
 - Write tools are disabled unless `PREY_ALLOW_WRITE=true`.
 - For large fleets, use pagination; `page_size` is capped at 100.
 - CSV location history is returned as base64 with `content_type`.
+
+## License
+
+MIT
